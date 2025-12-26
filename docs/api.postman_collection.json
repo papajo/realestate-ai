@@ -1,0 +1,288 @@
+{
+  "info": {
+    "name": "AI Real Estate Investing API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\",\n  \"full_name\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "username",
+                  "value": "user@example.com"
+                },
+                {
+                  "key": "password",
+                  "value": "password123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "Create Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"property_address\": \"123 Main St\",\n  \"property_city\": \"Los Angeles\",\n  \"property_state\": \"CA\",\n  \"property_zip\": \"90001\",\n  \"owner_name\": \"John Doe\",\n  \"owner_email\": \"john@example.com\",\n  \"owner_phone\": \"555-1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/leads",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leads"]
+            }
+          }
+        },
+        {
+          "name": "Get Leads",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/leads?skip=0&limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "leads"],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "List Stacking",
+      "item": [
+        {
+          "name": "Search Properties",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"address\": \"123 Main St\",\n  \"city\": \"Los Angeles\",\n  \"state\": \"CA\",\n  \"zip_code\": \"90001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/list-stacking/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "list-stacking", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chatbot",
+      "item": [
+        {
+          "name": "Create Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lead_id\": 1,\n  \"message\": \"I'm interested in selling my property\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/chatbot/conversation",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "chatbot", "conversation"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Property Analysis",
+      "item": [
+        {
+          "name": "Analyze Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/property-analysis/analyze/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "property-analysis", "analyze", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cash Buyers",
+      "item": [
+        {
+          "name": "Get Cash Buyers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/cash-buyers",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "cash-buyers"]
+            }
+          }
+        },
+        {
+          "name": "Scrape Cash Buyers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"location\": \"Los Angeles, CA\",\n  \"limit\": 100\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/cash-buyers/scrape",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "cash-buyers", "scrape"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tools",
+      "item": [
+        {
+          "name": "Generate Tool",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Create a tool that generates property listing ads\",\n  \"tool_type\": \"ad_generator\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/tools/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "tools", "generate"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    }
+  ]
+}
+

@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Node
+node_modules/
+.next/
+out/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Database
+*.db
+*.sqlite
+
+# ML Models
+*.pkl
+*.h5
+*.pb
+models/checkpoints/
+ml_models/artifacts/
+
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+secrets/
+*.pem
+*.key
+*.crt
+
+# Temporary
+tmp/
+temp/
+*.tmp
+
