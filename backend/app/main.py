@@ -1,11 +1,13 @@
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
 import uvicorn
 
 from app.core.config import settings
 from app.core.database import engine, Base
+from app.core.security_headers import SecurityHeadersMiddleware
 from app.api.v1.router import api_router
 from app.websocket.routes import websocket_endpoint
 
@@ -30,8 +32,14 @@ app = FastAPI(
     title="AI Real Estate Investing API",
     description="Full-stack SaaS application for real estate investing automation",
     version="1.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json"
 )
+
+# Security headers middleware
+app.add_middleware(SecurityHeadersMiddleware)
 
 # CORS middleware
 app.add_middleware(
@@ -62,14 +70,41 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    """
+    Health check endpoint for monitoring.
+    
+    Returns:
+        dict: Status of the application
+    """
+    return {"status": "healthy", "version": "1.0.0"}
 
 
-if __name__ == "__main__":
-    uvicorn.run(
-        "app.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=settings.DEBUG
+def custom_openapi():
+    """
+    Custom OpenAPI schema with enhanced documentation.
+    """
+    if app.openapi_schema:
+        return app.openapi_schema
+    
+    openapi_schema = get_openapi(
+        title="AI Real Estate Investing API",
+        version="1.0.0",
+        description="Complete API documentation for the Real Estate AI platform",
+        routes=app.routes,
     )
+    
+    # Add authentication info
+    openapi_schema["components"]["securitySchemes"] = {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
+        }
+    }
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app.openapi = custom_openapi
 
