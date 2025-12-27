@@ -51,18 +51,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     formData.append('username', email)
     formData.append('password', password)
 
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`,
-      formData
-    )
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login`,
+        formData
+      )
 
-    localStorage.setItem('access_token', response.data.access_token)
-    localStorage.setItem('refresh_token', response.data.refresh_token)
+      localStorage.setItem('access_token', response.data.access_token)
+      localStorage.setItem('refresh_token', response.data.refresh_token)
 
-    const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
-      headers: { Authorization: `Bearer ${response.data.access_token}` }
-    })
-    setUser(userResponse.data)
+      const userResponse = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
+        headers: { Authorization: `Bearer ${response.data.access_token}` }
+      })
+      setUser(userResponse.data)
+    } catch (error: any) {
+      console.error('Auth login error:', error)
+      throw error // Re-throw so Login component can handle it
+    }
   }
 
   const register = async (email: string, password: string, fullName: string) => {

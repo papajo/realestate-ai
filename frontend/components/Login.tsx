@@ -22,7 +22,30 @@ export default function Login() {
         toast.success('Registered successfully!')
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.detail || 'An error occurred')
+      console.error('Login error:', error)
+      
+      let errorMessage = 'An error occurred'
+      
+      if (error.response) {
+        // Server responded with error status
+        if (error.response.status === 401) {
+          errorMessage = error.response.data?.detail || 'Invalid email or password'
+        } else if (error.response.status === 422) {
+          errorMessage = 'Please check your input and try again'
+        } else if (error.response.status >= 500) {
+          errorMessage = 'Server error. Please try again later'
+        } else {
+          errorMessage = error.response.data?.detail || 'Login failed'
+        }
+      } else if (error.request) {
+        // Network error
+        errorMessage = 'Unable to connect to server. Please check your connection'
+      } else {
+        // Other error
+        errorMessage = error.message || 'An unexpected error occurred'
+      }
+      
+      toast.error(errorMessage)
     }
   }
 
