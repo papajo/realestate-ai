@@ -55,7 +55,7 @@ export default function PropertyAnalysis() {
       <h2 className="text-xl font-semibold mb-4">Property Analysis</h2>
       
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
           Upload Property Images
         </label>
         <input
