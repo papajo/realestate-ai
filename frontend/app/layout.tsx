@@ -7,6 +7,12 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'AI Real Estate Investing',
   description: 'Scaling Success with Automation',
+  other: {
+    'cache-control': 'no-cache, no-store, must-revalidate',
+    'pragma': 'no-cache',
+    'expires': '0',
+    'version': Date.now().toString(), // Force cache invalidation
+  },
 }
 
 export default function RootLayout({
