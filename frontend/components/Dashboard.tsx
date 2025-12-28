@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import LeadPipeline from '@/components/LeadPipeline'
 import PropertyAnalysis from '@/components/PropertyAnalysis'
@@ -25,7 +26,9 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">AI Real Estate Investing</h1>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-600">{user?.email}</span>
+            <Link href="/profile" className="text-sm text-gray-600 hover:text-gray-900 font-medium">
+              {user?.email}
+            </Link>
             <button
               onClick={logout}
               className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
@@ -53,11 +56,10 @@ export default function Dashboard() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                  activeTab === tab.id
-                    ? 'border-primary-500 text-primary-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                  ? 'border-primary-500 text-primary-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
               >
                 {tab.label}
               </button>

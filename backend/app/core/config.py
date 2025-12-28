@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     COUNTY_ASSESSOR_API_URL: str = "https://api.countyassessor.com"
     
     # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
+    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"]
     ALLOWED_HOSTS: List[str] = ["*"]
     
     # Monitoring
