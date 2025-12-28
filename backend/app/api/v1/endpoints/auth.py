@@ -151,3 +151,35 @@ async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
 async def get_current_user_info(current_user: User = Depends(get_current_user)):
     return current_user
 
+
+@router.put("/me", response_model=UserResponse)
+async def update_user_me(
+    user_data: UserUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Update current user profile.
+    """
+    if user_data.email and user_data.email != current_user.email:
+        # Check email uniqueness
+        result = await db.execute(select(User).where(User.email == user_data.email))
+        existing_user = result.scalar_one_or_none()
+        if existing_user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
+        current_user.email = user_data.email
+
+    if user_data.full_name:
+        current_user.full_name = user_data.full_name
+    
+    if user_data.password:
+        current_user.hashed_password = get_password_hash(user_data.password)
+
+    db.add(current_user)
+    await db.commit()
+    await db.refresh(current_user)
+    return current_user
+
