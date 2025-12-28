@@ -12,12 +12,18 @@ interface Lead {
   lead_score: number
   status: string
   distress_signals: any
+  owner_name?: string
+  owner_email?: string
+  owner_phone?: string
+  property_zip?: string
 }
 
 export default function LeadPipeline() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
+  const [showDetailModal, setShowDetailModal] = useState(false)
   const [newLead, setNewLead] = useState({
     property_address: '',
     property_city: '',
@@ -64,6 +70,11 @@ export default function LeadPipeline() {
     } catch (error) {
       toast.error('Failed to update lead')
     }
+  }
+
+  const handleViewDetails = (lead: Lead) => {
+    setSelectedLead(lead)
+    setShowDetailModal(true)
   }
 
   const handleCreateLead = async (e: React.FormEvent) => {
@@ -236,7 +247,10 @@ export default function LeadPipeline() {
                   </select>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
-                  <button className="text-primary-600 hover:text-primary-900">
+                  <button 
+                    onClick={() => handleViewDetails(lead)}
+                    className="text-primary-600 hover:text-primary-900"
+                  >
                     View Details
                   </button>
                 </td>
@@ -248,6 +262,68 @@ export default function LeadPipeline() {
           <div className="text-center py-8 text-gray-500">No leads found</div>
         )}
       </div>
+
+      {/* Lead Detail Modal */}
+      {showDetailModal && selectedLead && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+          <div className="relative top-20 mx-auto p-5 border w-11/12 max-w-2xl shadow-lg rounded-md bg-white">
+            <div className="mt-3">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium text-gray-900">Lead Details</h3>
+                <button
+                  onClick={() => setShowDetailModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <span className="text-2xl">&times;</span>
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Property Information</h4>
+                  <div className="space-y-2">
+                    <p><span className="font-medium">Address:</span> {selectedLead.property_address}</p>
+                    <p><span className="font-medium">City:</span> {selectedLead.property_city}</p>
+                    <p><span className="font-medium">State:</span> {selectedLead.property_state}</p>
+                    {selectedLead.property_zip && <p><span className="font-medium">ZIP:</span> {selectedLead.property_zip}</p>}
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold text-gray-700 mb-2">Lead Information</h4>
+                  <div className="space-y-2">
+                    <p><span className="font-medium">Score:</span> {(selectedLead.lead_score * 100).toFixed(1)}%</p>
+                    <p><span className="font-medium">Status:</span> {selectedLead.status}</p>
+                    {selectedLead.owner_name && <p><span className="font-medium">Owner:</span> {selectedLead.owner_name}</p>}
+                    {selectedLead.owner_email && <p><span className="font-medium">Email:</span> {selectedLead.owner_email}</p>}
+                    {selectedLead.owner_phone && <p><span className="font-medium">Phone:</span> {selectedLead.owner_phone}</p>}
+                  </div>
+                </div>
+              </div>
+              
+              {selectedLead.distress_signals && (
+                <div className="mt-4">
+                  <h4 className="font-semibold text-gray-700 mb-2">Distress Signals</h4>
+                  <div className="bg-gray-50 p-3 rounded">
+                    <pre className="text-sm text-gray-600 whitespace-pre-wrap">
+                      {JSON.stringify(selectedLead.distress_signals, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              )}
+              
+              <div className="flex justify-end mt-6">
+                <button
+                  onClick={() => setShowDetailModal(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
