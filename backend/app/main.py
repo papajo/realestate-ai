@@ -41,10 +41,10 @@ app = FastAPI(
 # Security headers middleware
 app.add_middleware(SecurityHeadersMiddleware)
 
-# CORS middleware
+# CORS middleware - allow all origins in DEBUG mode for Vercel preview deployments
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=["*"] if settings.DEBUG else settings.CORS_ORIGINS,  # Allow all in dev
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
