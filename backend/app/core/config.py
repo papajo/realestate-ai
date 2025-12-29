@@ -35,8 +35,13 @@ class Settings(BaseSettings):
     COUNTY_ASSESSOR_API_KEY: str = ""
     COUNTY_ASSESSOR_API_URL: str = "https://api.countyassessor.com"
     
-    # CORS
-    CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"]
+    # CORS - can be set via CORS_ORIGINS env var (comma-separated)
+    # Default includes localhost for development
+    _cors_origins_env = os.getenv("CORS_ORIGINS", "")
+    CORS_ORIGINS: List[str] = (
+        _cors_origins_env.split(",") if _cors_origins_env 
+        else ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"]
+    )
     ALLOWED_HOSTS: List[str] = ["*"]
     
     # Monitoring
