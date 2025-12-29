@@ -11,6 +11,7 @@ import Metrics from '@/components/Metrics'
 import NotificationPanel from '@/components/NotificationPanel'
 import ListStacking from '@/components/ListStacking'
 import Chatbot from '@/components/Chatbot'
+import Settings from '@/components/Settings'
 import { useWebSocket } from '@/hooks/useWebSocket'
 
 export default function Dashboard() {
@@ -50,6 +51,7 @@ export default function Dashboard() {
               { id: 'analysis', label: 'Property Analysis' },
               { id: 'buyers', label: 'Cash Buyers' },
               { id: 'tools', label: 'No-Code Builder' },
+              { id: 'settings', label: 'Settings' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -81,6 +83,7 @@ export default function Dashboard() {
           {activeTab === 'analysis' && <PropertyAnalysis />}
           {activeTab === 'buyers' && <CashBuyers />}
           {activeTab === 'tools' && <NoCodeBuilder />}
+          {activeTab === 'settings' && <Settings />}
         </div>
       </div>
     </div>

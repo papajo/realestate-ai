@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Dashboard from '@/components/Dashboard'
 import Login from '@/components/Login'
+import ErrorBoundary from '@/components/ErrorBoundary'
 import { useAuth, AuthProvider } from '@/hooks/useAuth'
 
 function HomeContent() {
@@ -27,9 +28,11 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <AuthProvider>
-      <HomeContent />
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <HomeContent />
+      </AuthProvider>
+    </ErrorBoundary>
   )
 }
 
