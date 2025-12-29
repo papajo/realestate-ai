@@ -29,7 +29,11 @@ export default function ListStacking() {
       )
 
       setResults(response.data)
-      toast.success('Property search completed!')
+      if (response.data.lead_id) {
+        toast.success(`Lead created successfully! Lead ID: ${response.data.lead_id}. It will appear in your Leads tab.`)
+      } else {
+        toast.success(`Search completed! Lead score: ${(response.data.lead_score * 100).toFixed(0)}% (below threshold, not saved)`)
+      }
     } catch (error: any) {
       toast.error(error.response?.data?.detail || 'Search failed')
     } finally {
