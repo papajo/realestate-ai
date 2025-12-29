@@ -1,0 +1,13 @@
+{
+  "name": "realestate-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Real Estate AI Monorepo - Frontend in ./frontend",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build"
+  }
+}
+
