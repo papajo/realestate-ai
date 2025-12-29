@@ -36,12 +36,12 @@ class Settings(BaseSettings):
     COUNTY_ASSESSOR_API_KEY: str = ""
     COUNTY_ASSESSOR_API_URL: str = "https://api.countyassessor.com"
     
-    # CORS - stored as string, parsed to list
-    _CORS_ORIGINS_STR: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002"
+    # CORS - stored as string in env, will be parsed to list
+    CORS_ORIGINS_STR: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002"
     
     @property
     def CORS_ORIGINS(self) -> List[str]:
-        env_value = os.getenv("CORS_ORIGINS", self._CORS_ORIGINS_STR)
+        env_value = os.getenv("CORS_ORIGINS", self.CORS_ORIGINS_STR)
         return [origin.strip() for origin in env_value.split(",") if origin.strip()]
     ALLOWED_HOSTS: List[str] = ["*"]
     
@@ -52,6 +52,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"  # Ignore extra fields like CORS_ORIGINS from env
 
 
 settings = Settings()
