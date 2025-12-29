@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Dict
+from pydantic import BaseModel
 import httpx
 
 from app.core.database import get_db
@@ -14,12 +15,16 @@ from app.services.lead_scoring import LeadScoringService
 router = APIRouter()
 
 
+class PropertySearchRequest(BaseModel):
+    address: str
+    city: str
+    state: str
+    zip_code: str
+
+
 @router.post("/search")
 async def search_properties(
-    address: str,
-    city: str,
-    state: str,
-    zip_code: str,
+    request: PropertySearchRequest,
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     background_tasks: BackgroundTasks = None
@@ -30,10 +35,10 @@ async def search_properties(
     try:
         # Fetch public record data
         property_data = await list_stacking_service.fetch_property_data(
-            address=address,
-            city=city,
-            state=state,
-            zip_code=zip_code
+            address=request.address,
+            city=request.city,
+            state=request.state,
+            zip_code=request.zip_code
         )
         
         # Detect distress signals
@@ -47,10 +52,10 @@ async def search_properties(
         if lead_score >= 0.5:
             new_lead = Lead(
                 user_id=current_user.id,
-                property_address=address,
-                property_city=city,
-                property_state=state,
-                property_zip=zip_code,
+                property_address=request.address,
+                property_city=request.city,
+                property_state=request.state,
+                property_zip=request.zip_code,
                 lead_score=lead_score,
                 distress_signals=distress_signals,
                 source="list_stacking"

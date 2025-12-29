@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
+from pydantic import BaseModel
 from sqlalchemy import select
 
 from app.core.database import get_db
@@ -12,10 +13,14 @@ from app.services.cash_buyer_scraper import CashBuyerScraperService
 router = APIRouter()
 
 
+class ScrapeRequest(BaseModel):
+    location: str
+    limit: int = 100
+
+
 @router.post("/scrape")
 async def scrape_cash_buyers(
-    location: str,
-    limit: int = 100,
+    request: ScrapeRequest,
     current_user: User = Depends(get_current_user),
     background_tasks: BackgroundTasks = None
 ):
@@ -25,14 +30,14 @@ async def scrape_cash_buyers(
     # Run scraping in background
     background_tasks.add_task(
         scraper_service.scrape_and_store,
-        location=location,
-        limit=limit
+        location=request.location,
+        limit=request.limit
     )
     
     return {
         "message": "Cash buyer scraping started",
-        "location": location,
-        "limit": limit
+        "location": request.location,
+        "limit": request.limit
     }
 
 
