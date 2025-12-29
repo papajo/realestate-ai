@@ -1,4 +1,5 @@
 from pydantic_settings import BaseSettings
+from pydantic import field_validator
 from typing import List
 import os
 
@@ -35,15 +36,13 @@ class Settings(BaseSettings):
     COUNTY_ASSESSOR_API_KEY: str = ""
     COUNTY_ASSESSOR_API_URL: str = "https://api.countyassessor.com"
     
-    # CORS - can be set via CORS_ORIGINS env var (comma-separated)
-    # Default includes localhost for development
-    _cors_origins_env = os.getenv("CORS_ORIGINS", "")
-    _default_origins = ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"]
+    # CORS - stored as string, parsed to list
+    _CORS_ORIGINS_STR: str = "http://localhost:3000,http://localhost:3001,http://localhost:3002"
     
-    if _cors_origins_env:
-        CORS_ORIGINS: List[str] = [origin.strip() for origin in _cors_origins_env.split(",")]
-    else:
-        CORS_ORIGINS: List[str] = _default_origins
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        env_value = os.getenv("CORS_ORIGINS", self._CORS_ORIGINS_STR)
+        return [origin.strip() for origin in env_value.split(",") if origin.strip()]
     ALLOWED_HOSTS: List[str] = ["*"]
     
     # Monitoring
