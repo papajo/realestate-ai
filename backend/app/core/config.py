@@ -37,7 +37,6 @@ class Settings(BaseSettings):
     
     # CORS - can be set via CORS_ORIGINS env var (comma-separated)
     # Default includes localhost for development
-    # For Vercel preview deployments, add all domains or use regex pattern
     _cors_origins_env = os.getenv("CORS_ORIGINS", "")
     _default_origins = ["http://localhost:3000", "http://localhost:3001", "http://localhost:3002"]
     
@@ -45,12 +44,6 @@ class Settings(BaseSettings):
         CORS_ORIGINS: List[str] = [origin.strip() for origin in _cors_origins_env.split(",")]
     else:
         CORS_ORIGINS: List[str] = _default_origins
-    
-    # Auto-add all Vercel preview domains if in development
-    if settings.DEBUG:
-        import re
-        vercel_pattern = re.compile(r'https://realestate-.*\.vercel\.app')
-        # This will be handled in main.py middleware
     ALLOWED_HOSTS: List[str] = ["*"]
     
     # Monitoring
